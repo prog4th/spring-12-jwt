@@ -14,3 +14,5 @@ https://zrr.kr/hVeU1l
 
 ---
 https://nano5.notion.site/JWT-2dadaf211d4281689587e81a76f0d8c6?source=copy_link
+
+<img width="640" alt="image" src="https://github.com/user-attachments/assets/b1e152e0-de92-42c1-b9ad-a4f411ab14ca" />
