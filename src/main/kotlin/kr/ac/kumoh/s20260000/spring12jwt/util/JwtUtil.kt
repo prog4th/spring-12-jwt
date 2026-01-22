@@ -3,7 +3,6 @@ package kr.ac.kumoh.s20260000.spring12jwt.util
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.*
@@ -22,14 +21,19 @@ class JwtUtil {
     @Value("\${jwt.secret}")
     private lateinit var base64EncodedSecretKey: String
 
-    private lateinit var key: SecretKey
+//    private lateinit var key: SecretKey
+//
+//    @PostConstruct
+//    fun init() {
+//        // base64EncodedSecretKey가 주입된 후, key 초기화
+//        // getDecoder() 대신 getUrlDecoder() 사용
+//        val decodedKey = Base64.getUrlDecoder().decode(base64EncodedSecretKey)
+//        key = Keys.hmacShaKeyFor(decodedKey)
+//    }
 
-    @PostConstruct
-    fun init() {
-        // base64EncodedSecretKey가 주입된 후, key 초기화
-        // getDecoder() 대신 getUrlDecoder() 사용
+    private val key: SecretKey by lazy  {
         val decodedKey = Base64.getUrlDecoder().decode(base64EncodedSecretKey)
-        key = Keys.hmacShaKeyFor(decodedKey)
+        Keys.hmacShaKeyFor(decodedKey)
     }
 
     fun generateAccessToken(username: String): String {
