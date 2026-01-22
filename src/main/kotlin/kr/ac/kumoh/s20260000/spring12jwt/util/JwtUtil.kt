@@ -7,10 +7,6 @@ import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.*
-// 0.11.5 버전
-//import java.security.Key
-
-// 0.13.0 버전
 import javax.crypto.SecretKey
 
 @Component
@@ -26,10 +22,6 @@ class JwtUtil {
     @Value("\${jwt.secret}")
     private lateinit var base64EncodedSecretKey: String
 
-    // 0.11.5 버전
-    //private lateinit var key: Key
-
-    // 0.13.0 버전
     private lateinit var key: SecretKey
 
     @PostConstruct
@@ -41,15 +33,6 @@ class JwtUtil {
     }
 
     fun generateAccessToken(username: String): String {
-        // 0.11.5 버전
-//        return Jwts.builder()
-//            .setSubject(username)
-//            .setIssuedAt(Date())
-//            .setExpiration(Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
-//            .signWith(key, SignatureAlgorithm.HS256)
-//            .compact()
-
-        // 0.13.0 버전
         return Jwts.builder()
             .subject(username)
             .issuedAt(Date())
@@ -59,15 +42,6 @@ class JwtUtil {
     }
 
     fun generateRefreshToken(username: String): String {
-        // 0.11.5 버전
-//        return Jwts.builder()
-//            .setSubject(username)
-//            .setIssuedAt(Date())
-//            .setExpiration(Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
-//            .signWith(key, SignatureAlgorithm.HS256)
-//            .compact()
-
-        // 0.13.0 버전
         return Jwts.builder()
             .subject(username)
             .issuedAt(Date())
@@ -78,29 +52,17 @@ class JwtUtil {
 
     fun validateToken(token: String): Boolean {
         return try {
-            // 0.11.5 버전
-//            val claims = Jwts.parserBuilder()
-//                .setSigningKey(key)
-//                .build()
-//                .parseClaimsJws(token)
-//                .body
-
-            // Verification (진위 확인)
-            val claims = Jwts.parser()
+            Jwts.parser()
                 .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
-
-            // 0.11.5 버전
-            //claims.expiration.after(Date())
-
-            // Validation (유효성 검증)
-            claims.payload.expiration.after(Date())
+            true
         } catch (e: SecurityException) {
             // Verification 실패 (서명 위조 등)
             false
         } catch (e: ExpiredJwtException) {
             // Validation 실패 (만료된 토큰)
+            //println("!!!!!!!!!! JWT expired")
             false
         } catch (e: Exception) {
             false
@@ -108,14 +70,6 @@ class JwtUtil {
     }
 
     fun extractUsername(token: String): String {
-        // 0.11.5 버전
-//        return Jwts.parserBuilder()
-//            .setSigningKey(key)
-//            .build()
-//            .parseClaimsJws(token)
-//            .body.subject
-
-        // 0.13.0 버전
         return Jwts.parser()
             .verifyWith(key)
             .build()
